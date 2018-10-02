@@ -1,6 +1,8 @@
 class TelegramController < Telegram::Bot::UpdatesController
 
-  before_action :get_tag
+  before_action do
+    Info.create(tag: params[:action], body: payload.inspect)
+  end
 
   def start!
     reply_with :message, text: "toto truc cul"
