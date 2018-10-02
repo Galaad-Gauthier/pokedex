@@ -4,7 +4,7 @@ class TelegramController < Telegram::Bot::UpdatesController
     reply_with :message, text: "Oui bonjour."
   end
 
-  def add_info!
+  def add_info!(tag, body)
     service = Telegram::AddInfoService.new(self.payload)
 
     if service.call
@@ -14,7 +14,7 @@ class TelegramController < Telegram::Bot::UpdatesController
     end
   end
 
-  def clear_info!
+  def clear_info!(tag)
     service = Telegram::ClearInfoService.new(self.payload)
 
     if service.call
@@ -24,7 +24,7 @@ class TelegramController < Telegram::Bot::UpdatesController
     end
   end
 
-  def info!
+  def info!(tag)
     service = Telegram::GetInfoService.new(self.payload)
     info_body = service.call
 
