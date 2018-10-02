@@ -12,9 +12,7 @@ module Telegram
     end
 
     def valid?
-      Rails.logger.debug payload.inspect
-      Rails.logger.debug 'CECI ÉTAIT UN LOG'
-      payload['chat']['id'] == ENV['POKEDEX_CHAT_ID'] &&
+      payload['chat']['id'].to_s == ENV['POKEDEX_CHAT_ID'] &&
       tag.present?
     end
 
