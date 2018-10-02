@@ -12,7 +12,7 @@ module Telegram
     end
 
     def valid?
-      payload[:chat][:id] == ENV['POKEDEX_CHAT_ID'] &&
+      payload['chat']['id'] == ENV['POKEDEX_CHAT_ID'] &&
       tag.present?
     end
 
@@ -23,7 +23,7 @@ module Telegram
     end
 
     def get_command_args
-      text           = payload[:message][:text]
+      text           = payload['message']['text']
       matched_string = text.match(TELEGRAM_COMMAND_REGEXP).try(:[], 1)
 
       @tag, @body = matched_string.try(:split, ' ')
