@@ -3,7 +3,7 @@ module Telegram
 
     TELEGRAM_COMMAND_REGEXP = /^\/\w+ (.+)$/.freeze
 
-    attr_reader :payload, :tag, :body, :info
+    attr_reader :payload, :tag, :body, :info, :text
 
     def initialize(payload)
       @payload = payload
@@ -12,7 +12,7 @@ module Telegram
     end
 
     def valid?
-      payload['chat']['id'] == ENV['POKEDEX_CHAT_ID'] &&
+      payload[:chat][:id] == ENV['POKEDEX_CHAT_ID'] &&
       tag.present?
     end
 
@@ -23,7 +23,9 @@ module Telegram
     end
 
     def get_command_args
-      matched_string = payload["text"].match(TELEGRAM_COMMAND_REGEXP).try(:[], 1)
+      text           = payload[:message][:text]
+      matched_string = text.match(TELEGRAM_COMMAND_REGEXP).try(:[], 1)
+
       @tag, @body = matched_string.try(:split, ' ')
     end
   end
