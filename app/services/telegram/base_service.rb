@@ -4,7 +4,7 @@ module Telegram
     attr_reader :chat_id, :tag, :body, :info
 
     def initialize(chat_id, tag, body=[])
-      @payload = payload
+      @tag     = tag
       @body    = body.join(' ')
       @chat_id = chat_id
     end
