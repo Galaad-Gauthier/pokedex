@@ -1,59 +1,38 @@
-require "decent_exposure"
-
 class TelegramController < Telegram::Bot::UpdatesController
 
-  TELEGRAM_COMMAND_REGEXP = /^\/\w+ (.+)$/.freeze
-
-  before_action :authorize_chat_id
-  before_action :ensure_args_presence
-
   def start!
-    reply_with :message, text: "toto truc cul"
+    reply_with :message, text: "Oui bonjour."
   end
 
   def add_info!
-    if @info.persisted?
-      @info.body = body
-    else
-      @info.body += "\n\n#{body}"
-    end
+    service = Telegram::AddInfoService.new(self.payload)
 
-    reply_with :message, text: "The infos about #{tag} were successfully updated."
+    if service.call
+      reply_with :message, text: "The info about #{service.tag} was successfully updated."
+    else
+      reply_with :message, text: "Nope."
+    end
   end
 
   def clear_info!
-    @info.destroy!
-    reply_with :message, text: "All infos about #{tag} were successfully destroyed."
+    service = Telegram::ClearInfoService.new(self.payload)
+
+    if service.call
+      reply_with :message, text: "All info about #{service.tag} was successfully destroyed."
+    else
+      reply_with :message, text: "Nope."
+    end
   end
 
   def info!
-    reply_with :message, text: @info.body
-  end
+    service = Telegram::GetInfoService.new(self.payload)
+    info_body = service.call
 
-  private
-
-  def authorize_chat_id
-    head :forbidden unless self.payload['chat']['id'] == ENV['POKEDEX_CHAT_ID']
-  end
-
-  def ensure_args_presence
-    head :bad_request unless tag && body
-  end
-
-  def command_args
-    @command_args ||= self.payload["text"].match(TELEGRAM_COMMAND_REGEXP).try(:[], 1).try(:split, ' ')
-  end
-
-  def tag
-    @tag ||= command_args.first
-  end
-
-  def body
-    @body ||= command_args.last
-  end
-
-  def info
-    @info ||= Info.where(tag: tag).first_or_initialize
+    if info_body
+      reply_with :message, text: info_body
+    else
+      reply_with :message, text: "Nope."
+    end
   end
 
 end
