@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
 
-  telegram_webhook TelegramController, default: :start!
+  telegram_webhook TelegramController
 
 end
