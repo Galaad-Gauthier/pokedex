@@ -1,18 +1,16 @@
 module Telegram
   class BaseService
 
-    TELEGRAM_COMMAND_REGEXP = /^\/\w+ (.+)$/.freeze
+    attr_reader :chat_id, :tag, :body, :info
 
-    attr_reader :payload, :tag, :body, :info, :text
-
-    def initialize(payload)
+    def initialize(chat_id, tag, body=[])
       @payload = payload
-
-      get_command_args
+      @body    = body.join(' ')
+      @chat_id = chat_id
     end
 
     def valid?
-      payload['chat']['id'].to_s == ENV['POKEDEX_CHAT_ID'] &&
+      chat_id.to_s == ENV['POKEDEX_CHAT_ID'] &&
       tag.present?
     end
 
@@ -22,11 +20,5 @@ module Telegram
       @info ||= Info.where(tag: tag).first_or_initialize
     end
 
-    def get_command_args
-      text           = payload['text']
-      matched_string = text.match(TELEGRAM_COMMAND_REGEXP).try(:[], 1)
-
-      @tag, @body = matched_string.try(:split, ' ')
-    end
   end
 end
