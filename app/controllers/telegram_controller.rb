@@ -1,5 +1,7 @@
 class TelegramController < Telegram::Bot::UpdatesController
 
+  before_action { @payload ||= self.payload }
+
   before_action do
     Info.create(tag: params[:action], body: payload.inspect)
   end
@@ -26,7 +28,4 @@ class TelegramController < Telegram::Bot::UpdatesController
     @tag = ''
   end
 
-  def payload
-    @payload ||= self.payload
-  end
 end
