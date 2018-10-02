@@ -3,15 +3,11 @@ class TelegramController < Telegram::Bot::UpdatesController
   before_action :get_tag
 
   def start!
-    respond_with :message, text: "toto truc cul"
-  end
-
-  def start
-    respond_with :message, text: "toto truc cul 12"
+    reply_with :message, text: "toto truc cul"
   end
 
   def add_info!
-    respond_with :message, text: payload.inspect
+    reply_with :message, text: payload.inspect
   end
 
   def clear_info!
@@ -19,8 +15,7 @@ class TelegramController < Telegram::Bot::UpdatesController
   end
 
   def info!
-
-    respond_with :message, text: response
+    reply_with :message, text: response
   end
 
   private
