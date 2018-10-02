@@ -17,7 +17,7 @@ module Telegram
     private
 
     def info
-      @info ||= Info.where(tag: tag).first_or_initialize
+      @info ||= Info.where(tag: tag.downcase).first_or_initialize
     end
 
   end
